@@ -1,0 +1,113 @@
+query Post($postId: ID!) {
+  post(id: $postId, idType: DATABASE_ID) {
+    date
+    modified
+    title
+    status
+    content
+    databaseId
+    excerpt
+    featuredImage {
+      node {
+        mediaItemUrl
+      }
+    }
+    author {
+      node {
+        description
+        name
+        nickname
+        slug
+        facebook
+        instagram
+        avatar {
+          url
+        }
+      }
+    }
+    categories {
+      nodes {
+        name
+        slug
+      }
+    }
+    tags {
+      nodes {
+        name
+        slug
+      }
+    }
+  }
+}
+
+query Posts(
+  $first: Int
+  $categoryName: String
+  $authorName: String
+  $includeExcerpt: Boolean = false
+  $includePageInfo: Boolean = false
+  $in: [ID]
+  $notIn: [ID]
+  $tagSlug: [String]
+  $searchKeyword: String
+  $after: String
+  $includeDetails: Boolean = false
+  $orderBy: PostObjectsConnectionOrderbyEnum = DATE
+) {
+  posts(
+    where: {
+      orderby: { field: $orderBy, order: DESC }
+      categoryName: $categoryName
+      authorName: $authorName
+      in: $in
+      notIn: $notIn
+      tagSlugIn: $tagSlug
+      search: $searchKeyword
+    }
+    first: $first
+    after: $after
+  ) {
+    nodes {
+      excerpt @include(if: $includeExcerpt)
+      content @include(if: $includeDetails)
+      author @include(if: $includeDetails) {
+        node {
+          name
+          nickname
+          slug
+          description
+          avatar {
+            url
+          }
+        }
+      }
+      date @include(if: $includeDetails)
+      modified @include(if: $includeDetails)
+      tags {
+        nodes {
+          id
+          name
+          slug
+        }
+      }
+      categories {
+        nodes {
+          id
+          slug
+          name
+        }
+      }
+      databaseId
+      title
+      featuredImage {
+        node {
+          mediaItemUrl
+        }
+      }
+    }
+    pageInfo @include(if: $includePageInfo) {
+      endCursor
+      hasNextPage
+    }
+  }
+}

@@ -1,0 +1,12 @@
+schema:
+  - https://very.icook.tw/graphql:
+      headers:
+        user-agent: "JS GraphQL"
+documents:
+  - "./**/*.graphql"
+generates:
+  ./graphql/types-and-hooks.tsx:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
